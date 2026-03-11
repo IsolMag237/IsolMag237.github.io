@@ -8,7 +8,6 @@ body{
 font-family:Arial, Helvetica, sans-serif;
 }
 
-/* Intro video */
 #intro{
 position:fixed;
 width:100%;
@@ -26,12 +25,10 @@ height:100%;
 object-fit:cover;
 }
 
-/* Ocultar contenido al inicio */
 #contenido{
 display:none;
 }
 
-/* Header */
 header{
 background:#222;
 color:white;

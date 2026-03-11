@@ -1,11 +1,8 @@
-// Mensaje cuando carga la página
-console.log("Página cargada correctamente");
+const video = document.getElementById("introVideo");
+const intro = document.getElementById("intro");
+const contenido = document.getElementById("contenido");
 
-// Ejemplo de interacción
-document.addEventListener("DOMContentLoaded", function() {
-    const titulo = document.querySelector("h1");
-
-    titulo.addEventListener("click", function(){
-        alert("¡Hiciste clic en el título!");
-    });
-});
+video.onended = function(){
+intro.style.display = "none";
+contenido.style.display = "block";
+};

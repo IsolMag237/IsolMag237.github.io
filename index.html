@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Sitio Web Interactivo</title>
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #0f172a; /* Fondo oscuro moderno */
+            color: #f8fafc;
+            overflow: hidden; /* Evita el scroll durante la intro */
+        }
+
+        /* --- PANTALLA DE INTRO (GIF) --- */
+        #pantalla-intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #gif-intro {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        #contenido-principal {
+            opacity: 0;
+            transition: opacity 1.2s ease;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .subtitulo {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        /* --- CONTENEDOR DE BOTONES --- */
+        .contenedor-botones {
+            display: flex;
+            gap: 30px; /* Espacio entre los botones */
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Ajuste para celulares */
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* --- ESTILO DE LOS BOTONES --- */
+        .boton-video {
+            background: none;
+            border: 3px solid #334155;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 320px;     /* Proporción estilo YouTube */
+            height: 180px;    
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+        }
+
+        /* Animación de ampliación al pasar el cursor */
+        .boton-video:hover {
+            transform: scale(1.08); 
+            border-color: #38bdf8;  /* Borde azul brillante */
+        }
+
+        .boton-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. PANTALLA DE INTRO -->
+    <div id="pantalla-intro">
+        <img id="gif-intro" src="intro.gif" alt="Cargando...">
+    </div>
+
+    <!-- 2. CONTENIDO PRINCIPAL -->
+    <div id="contenido-principal">
+        <h1>Explora el Contenido</h1>
+        <p class="subtitulo">Pasa el cursor sobre los botones para previsualizar el video</p>
+
+        <!-- CONTENEDOR DE LOS 3 BOTONES -->
+        <div class="contenedor-botones">
+
+            <!-- Botón 1 -->
+            <button class="boton-video">
+                <video src="videoboton1.mp4" loop muted preload="metadata" poster="imagenboton1.webp"></video>
+            </button>
+
+            <!-- Botón 2 -->
+            <button class="boton-video">
+                <video src="videoboton2.mp4" loop muted preload="metadata" poster="imagenboton2.webp"></video>
+            </button>
+
+            <!-- Botón 3 -->
+            <button class="boton-video">
+                <video src="videoboton3.mp4" loop muted preload="metadata" poster="imagenboton3.webp"></video>
+            </button>
+
+        </div>
+    </div>
+
+    <!-- 3. LÓGICA JAVASCRIPT -->
+    <script>
+        // --- Control de la Intro ---
+        window.addEventListener('load', () => {
+            const tiempoDeIntro = 3500; // Tiempo que se muestra tu GIF
+            setTimeout(() => {
+                const intro = document.getElementById('pantalla-intro');
+                const contenido = document.getElementById('contenido-principal');
+                intro.style.opacity = '0';
+                intro.style.visibility = 'hidden';
+                contenido.style.opacity = '1';
+                document.body.style.overflow = 'auto';
+            }, tiempoDeIntro);
+        });
+
+        // --- Control del efecto de reproducción de Video ---
+        const botones = document.querySelectorAll('.boton-video');
+
+        botones.forEach(boton => {
+            const video = boton.querySelector('video');
+
+            // Al pasar el cursor: se reproduce el video
+            boton.addEventListener('mouseenter', () => {
+                video.play();
+            });
+
+            // Al quitar el cursor: se pausa y vuelve al inicio (mostrando la imagen webp otra vez)
+            boton.addEventListener('mouseleave', () => {
+                video.pause();
+                video.currentTime = 0; 
+            });
+        });
+    </script>
+
+</body>
+</html>

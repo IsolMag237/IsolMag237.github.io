@@ -12,9 +12,9 @@
             width: 100%;
             height: 100%;
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #0f172a; /* Fondo oscuro moderno */
+            background-color: #0f172a; 
             color: #f8fafc;
-            overflow: hidden; /* Evita el scroll durante la intro */
+            overflow: hidden; 
         }
 
         /* --- PANTALLA DE INTRO (GIF) --- */
@@ -71,10 +71,10 @@
         /* --- CONTENEDOR DE BOTONES --- */
         .contenedor-botones {
             display: flex;
-            gap: 30px; /* Espacio entre los botones */
+            gap: 30px; 
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap; /* Ajuste para celulares */
+            flex-wrap: wrap; 
             max-width: 1200px;
             width: 100%;
         }
@@ -87,17 +87,26 @@
             cursor: pointer;
             border-radius: 12px;
             overflow: hidden;
-            width: 320px;     /* Proporción estilo YouTube */
+            width: 320px;     
             height: 180px;    
             position: relative;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease;
+            /* Transición suave para tamaño y bordes */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Animación de ampliación al pasar el cursor */
+        /* 1. Al pasar el cursor (Efecto YouTube básico) */
         .boton-video:hover {
             transform: scale(1.08); 
-            border-color: #38bdf8;  /* Borde azul brillante */
+            border-color: #38bdf8;  
+        }
+
+        /* 2. NUEVO: Al hacer CLIK (Se agranda aún más) */
+        .boton-video.activo {
+            transform: scale(1.2) !important; /* Agranda a un 20% más de su tamaño original */
+            border-color: #a855f7;            /* Cambia el borde a color morado para indicar que está activo */
+            box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.4); /* Brillo morado de fondo */
+            z-index: 10;                      /* Se posiciona por encima de los otros botones al agrandarse */
         }
 
         .boton-video video {
@@ -118,9 +127,8 @@
     <!-- 2. CONTENIDO PRINCIPAL -->
     <div id="contenido-principal">
         <h1>Explora el Contenido</h1>
-        <p class="subtitulo">Pasa el cursor sobre los botones para previsualizar el video</p>
+        <p class="subtitulo">Pasa el cursor para previsualizar. ¡Haz clic para agrandar!</p>
 
-        <!-- CONTENEDOR DE LOS 3 BOTONES -->
         <div class="contenedor-botones">
 
             <!-- Botón 1 -->
@@ -145,7 +153,7 @@
     <script>
         // --- Control de la Intro ---
         window.addEventListener('load', () => {
-            const tiempoDeIntro = 3500; // Tiempo que se muestra tu GIF
+            const tiempoDeIntro = 3500; 
             setTimeout(() => {
                 const intro = document.getElementById('pantalla-intro');
                 const contenido = document.getElementById('contenido-principal');
@@ -156,22 +164,46 @@
             }, tiempoDeIntro);
         });
 
-        // --- Control del efecto de reproducción de Video ---
+        // --- Control Interactivo de los Botones ---
         const botones = document.querySelectorAll('.boton-video');
 
         botones.forEach(boton => {
             const video = boton.querySelector('video');
 
-            // Al pasar el cursor: se reproduce el video
+            // ACCIÓN 1: Al pasar el cursor -> Reproducir video
             boton.addEventListener('mouseenter', () => {
-                video.play();
+                video.play().catch(error => console.log("Reproducción prevenida:", error));
             });
 
-            // Al quitar el cursor: se pausa y vuelve al inicio (mostrando la imagen webp otra vez)
+            // ACCIÓN 2: Al salir del cuadro -> Pausar y OBLIGAR a mostrar la imagen (.webp) de portada otra vez
             boton.addEventListener('mouseleave', () => {
                 video.pause();
-                video.currentTime = 0; 
+                // Truco para resetear el video y forzar al navegador a pintar el "poster" de nuevo
+                const srcOriginal = video.src;
+                video.src = '';
+                video.load();
+                video.src = srcOriginal;
             });
+
+            // ACCIÓN 3: Al hacer clic -> Agranda / Encoge el botón
+            boton.addEventListener('click', (e) => {
+                // Si el botón cliqueado ya estaba grande, lo encogemos
+                if (boton.classList.contains('activo')) {
+                    boton.classList.remove('activo');
+                } else {
+                    // Primero quitamos el tamaño grande de CUALQUIER otro botón para que solo haya uno expandido
+                    botones.forEach(b => b.classList.remove('activo'));
+                    // Le ponemos el tamaño grande al botón que tocamos
+                    boton.classList.add('activo');
+                }
+            });
+        });
+
+        // Clic extra: Si haces clic en el fondo de la pantalla (fuera de los botones), todos regresan a su tamaño normal
+        document.getElementById('contenido-principal').addEventListener('click', (e) => {
+            if (e.target.id === 'contenido-principal' || e.target.tagName === 'H1' || e.target.className === 'subtitulo') {
+                botones.forEach(b => b.classList.remove('activo'));
+            }
         });
     </script>
 

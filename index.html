@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Sitio Web Interactivo</title>
+    <title>Mi Sitio Web Interactivo - Modo Enfoque</title>
     <style>
         /* --- ESTILOS GENERALES --- */
         body, html {
@@ -39,6 +39,25 @@
             position: absolute;
             top: 0;
             left: 0;
+        }
+
+        /* --- FONDO OSCURO PARA OPACAR (Capa fantasma) --- */
+        #capa-oscura {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85); /* Opaca fuertemente el fondo */
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        /* Cuando la capa está activa */
+        #capa-oscura.activa {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* --- CONTENIDO PRINCIPAL --- */
@@ -79,7 +98,7 @@
             width: 100%;
         }
 
-        /* --- ESTILO DE LOS BOTONES --- */
+        /* --- ESTILO BASE DE LOS BOTONES --- */
         .boton-video {
             background: none;
             border: 3px solid #334155;
@@ -91,33 +110,51 @@
             height: 180px;    
             position: relative;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-            /* Transición suave para tamaño y bordes */
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s ease, box-shadow 0.3s ease;
+            /* Transiciones separadas para que la animación al expandirse sea fluida */
+            transition: transform 0.3s ease, border-color 0.3s ease, width 0.4s ease, height 0.4s ease, box-shadow 0.3s ease;
         }
 
-        /* 1. Al pasar el cursor (Efecto YouTube básico) */
-        .boton-video:hover {
+        /* Vista normal: Al pasar el cursor encima */
+        .boton-video:not(.expandido):hover {
             transform: scale(1.08); 
             border-color: #38bdf8;  
         }
 
-        /* 2. NUEVO: Al hacer CLIK (Se agranda aún más) */
-        .boton-video.activo {
-            transform: scale(1.2) !important; /* Agranda a un 20% más de su tamaño original */
-            border-color: #a855f7;            /* Cambia el borde a color morado para indicar que está activo */
-            box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.4); /* Brillo morado de fondo */
-            z-index: 10;                      /* Se posiciona por encima de los otros botones al agrandarse */
-        }
-
+        /* Ajuste inicial del video (recortado para miniatura estandarizada) */
         .boton-video video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; 
             display: block;
+        }
+
+        /* --- NUEVO: EFECTO MODO TEATRO / EXPANDIDO --- */
+        .boton-video.expandido {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1); /* Lo clava en el centro exacto */
+            width: 80vw;         /* Toma el 80% del ancho de la pantalla */
+            height: 80vh;        /* Toma el 80% del alto de la pantalla */
+            max-width: 1000px;   /* Límite para que no se deforme en pantallas gigantes */
+            max-height: 562px;   /* Mantiene proporción cinematográfica */
+            z-index: 100;        /* Se posiciona por encima de la capa oscura */
+            border-color: #38bdf8;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            cursor: zoom-out;    /* El cursor cambia para indicar que se puede encoger */
+        }
+
+        /* Cuando está expandido, el video NO debe cortarse */
+        .boton-video.expandido video {
+            object-fit: contain; /* Muestra el video completo en sus proporciones reales */
+            background-color: #000; /* Fondo negro por si el formato del video deja franjas */
         }
     </style>
 </head>
 <body>
+
+    <!-- Capa oscura de fondo (para opacar la pantalla) -->
+    <div id="capa-oscura"></div>
 
     <!-- 1. PANTALLA DE INTRO -->
     <div id="pantalla-intro">
@@ -127,7 +164,7 @@
     <!-- 2. CONTENIDO PRINCIPAL -->
     <div id="contenido-principal">
         <h1>Explora el Contenido</h1>
-        <p class="subtitulo">Pasa el cursor para previsualizar. ¡Haz clic para agrandar!</p>
+        <p class="subtitulo">Pasa el cursor para previsualizar. ¡Haz clic para expandir en grande!</p>
 
         <div class="contenedor-botones">
 
@@ -164,47 +201,70 @@
             }, tiempoDeIntro);
         });
 
-        // --- Control Interactivo de los Botones ---
+        // --- Control de Botones Expandibles ---
         const botones = document.querySelectorAll('.boton-video');
+        const capaOscura = document.getElementById('capa-oscura');
+
+        // Función para encoger el video que esté abierto
+        function cerrarVideoExpandido() {
+            botones.forEach(b => {
+                if (b.classList.contains('expandido')) {
+                    b.classList.remove('expandido');
+                    const video = b.querySelector('video');
+                    // Al cerrarse, pausamos y reseteamos el video a su imagen estática
+                    video.pause();
+                    const srcOriginal = video.src;
+                    video.src = '';
+                    video.load();
+                    video.src = srcOriginal;
+                }
+            });
+            capaOscura.classList.remove('activa');
+        }
 
         botones.forEach(boton => {
             const video = boton.querySelector('video');
 
-            // ACCIÓN 1: Al pasar el cursor -> Reproducir video
+            // 1. Al pasar el cursor (solo si no está expandido ya)
             boton.addEventListener('mouseenter', () => {
-                video.play().catch(error => console.log("Reproducción prevenida:", error));
+                if (!boton.classList.contains('expandido')) {
+                    video.play().catch(e => console.log(e));
+                }
             });
 
-            // ACCIÓN 2: Al salir del cuadro -> Pausar y OBLIGAR a mostrar la imagen (.webp) de portada otra vez
+            // 2. Al quitar el cursor (solo si no está expandido)
             boton.addEventListener('mouseleave', () => {
-                video.pause();
-                // Truco para resetear el video y forzar al navegador a pintar el "poster" de nuevo
-                const srcOriginal = video.src;
-                video.src = '';
-                video.load();
-                video.src = srcOriginal;
+                if (!boton.classList.contains('expandido')) {
+                    video.pause();
+                    const srcOriginal = video.src;
+                    video.src = '';
+                    video.load();
+                    video.src = srcOriginal;
+                }
             });
 
-            // ACCIÓN 3: Al hacer clic -> Agranda / Encoge el botón
+            // 3. Al hacer clic: Expandir / Activar Modo Teatro
             boton.addEventListener('click', (e) => {
-                // Si el botón cliqueado ya estaba grande, lo encogemos
-                if (boton.classList.contains('activo')) {
-                    boton.classList.remove('activo');
+                e.stopPropagation(); // Evita que el clic se confunda con el fondo
+
+                if (boton.classList.contains('expandido')) {
+                    cerrarVideoExpandido();
                 } else {
-                    // Primero quitamos el tamaño grande de CUALQUIER otro botón para que solo haya uno expandido
-                    botones.forEach(b => b.classList.remove('activo'));
-                    // Le ponemos el tamaño grande al botón que tocamos
-                    boton.classList.add('activo');
+                    // Si había otro abierto, lo cierra primero
+                    cerrarVideoExpandido();
+                    
+                    // Expande este botón y activa el fondo oscuro
+                    boton.classList.add('expandido');
+                    capaOscura.classList.add('activa');
+                    
+                    // Se asegura de que el video se esté reproduciendo en pantalla grande
+                    video.play().catch(e => console.log(e));
                 }
             });
         });
 
-        // Clic extra: Si haces clic en el fondo de la pantalla (fuera de los botones), todos regresan a su tamaño normal
-        document.getElementById('contenido-principal').addEventListener('click', (e) => {
-            if (e.target.id === 'contenido-principal' || e.target.tagName === 'H1' || e.target.className === 'subtitulo') {
-                botones.forEach(b => b.classList.remove('activo'));
-            }
-        });
+        // 4. Si haces clic en la capa oscura (afuera del video), todo vuelve a la normalidad
+        capaOscura.addEventListener('click', cerrarVideoExpandido);
     </script>
 
 </body>

@@ -3,21 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Sitio Web Interactivo - Navegación</title>
+    <title>Inicio de Sesión</title>
     <style>
         /* --- ESTILOS GENERALES --- */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #0f172a; 
-            color: #f8fafc;
+            background-color: #000; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden; 
         }
 
-        /* --- PANTALLA DE INTRO (GIF) --- */
+        /* --- 1. PANTALLA DE INTRO (GIF) --- */
         #pantalla-intro {
             position: fixed;
             top: 0;
@@ -41,80 +48,111 @@
             left: 0;
         }
 
-        /* --- CONTENIDO PRINCIPAL --- */
-        #contenido-principal {
+        /* --- 2. CONTENIDO DEL LOGIN --- */
+        #contenido-login {
             opacity: 0;
             transition: opacity 1.2s ease;
-            width: 100vw;
-            height: 100vh;
             display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
 
-        /* Títulos superiores flotantes */
-        .encabezado {
-            padding: 20px;
-            text-align: center;
-            background: linear-gradient(to bottom, rgba(15,23,42,1), rgba(15,23,42,0));
+        /* NUEVO: Video ambiental de fondo detrás de la interfaz */
+        .video-fondo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 1; /* Se queda al fondo de todo */
+            pointer-events: none;
+        }
+
+        /* El cuadro contenedor (Ahora usa tu archivo .png) */
+        .cuadro-interfaz {
+            position: relative;
+            width: 500px;  
+            height: 375px; 
+            background-image: url('Inicio de Sesion.png'); /* Nombre exacto de tu imagen */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            z-index: 10; /* Se posiciona por delante del video de fondo */
+        }
+
+        /* Capa transparente del formulario */
+        .formulario-capa {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 10;
-            box-sizing: border-box;
-            pointer-events: none; /* Hace que el texto no interfiera con los clics de los videos */
-        }
-
-        h1 { margin: 0 0 5px 0; font-size: 2rem; color: #fff; }
-        .subtitulo { margin: 0; color: #94a3b8; font-size: 1rem; }
-
-        /* --- CONTENEDOR ELÁSTICO --- */
-        .contenedor-botones {
-            display: flex;
-            width: 100%;
-            height: 100vh; 
-            align-items: stretch; 
-            gap: 0; 
-        }
-
-        /* --- ESTILO BASE DE LOS ENLACES/BOTONES --- */
-        .enlace-panel {
-            flex: 1; /* Cada uno inicia ocupando el 33.33% de la pantalla */
-            background: #000;
-            text-decoration: none; /* Elimina cualquier línea de enlace de texto por defecto */
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            /* Transición fluida para el efecto de empuje elástico */
-            transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* Línea sutil divisoria entre los paneles */
-        .enlace-panel:not(:last-child) {
-            border-right: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* --- EFECTO ELÁSTICO (HOVER) --- */
-        /* El panel seleccionado se expande */
-        .contenedor-botones:hover .enlace-panel:hover {
-            flex: 2.2; 
-        }
-
-        /* Los otros dos paneles se aplastan y se opacan */
-        .contenedor-botones:hover .enlace-panel:not(:hover) {
-            flex: 0.4; 
-            opacity: 0.3; 
-            filter: grayscale(50%);
-            transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
-        }
-
-        /* El video se adapta al tamaño del panel elástico */
-        .enlace-panel video {
-            width: 100%;
             height: 100%;
-            object-fit: cover; 
-            display: block;
+        }
+
+        /* Cajas de texto invisibles sobre la madera */
+        .campo-entrada {
+            position: absolute;
+            background: transparent; 
+            border: none;
+            outline: none;
+            color: #fcd34d; /* Texto dorado pixel */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px 10px;
+            user-select: text; 
+        }
+
+        /* Posición exacta sobre USUARIO */
+        #usuario {
+            top: 31%;
+            left: 15.5%;
+            width: 69%;
+            height: 11%;
+        }
+
+        /* Posición exacta sobre CONTRASEÑA */
+        #contrasena {
+            top: 54.5%;
+            left: 15.5%;
+            width: 69%;
+            height: 11%;
+        }
+
+        /* Botones invisibles interactivos */
+        .boton-interactivo {
+            position: absolute;
+            background: rgba(255, 255, 255, 0); 
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        /* Brillo sutil al pasar el cursor */
+        .boton-interactivo:hover {
+            background: rgba(255, 255, 255, 0.12); 
+        }
+
+        /* Encaja sobre el botón azul "INICIAR SESIÓN" */
+        #btn-iniciar {
+            bottom: 9.5%;
+            left: 8.5%;
+            width: 41%;
+            height: 13.5%;
+        }
+
+        /* Encaja sobre el botón gris "CANCELAR" */
+        #btn-cancelar {
+            bottom: 9.5%;
+            right: 8.5%;
+            width: 41%;
+            height: 13.5%;
         }
     </style>
 </head>
@@ -125,68 +163,67 @@
         <img id="gif-intro" src="intro.gif" alt="Cargando...">
     </div>
 
-    <!-- 2. CONTENIDO PRINCIPAL -->
-    <div id="contenido-principal">
+    <!-- 2. INTERFAZ DE LOGIN -->
+    <div id="contenido-login">
         
-        <div class="encabezado">
-            <h1>Explora el Contenido</h1>
-            <p class="subtitulo">Pasa el cursor para expandir. Haz clic para entrar.</p>
+        <!-- NUEVO: Tu video de fondo reproduciéndose automáticamente -->
+        <video class="video-fondo" src="video_1772677728570.mp4" autoplay loop muted playsinline></video>
+
+        <!-- Cuadro de madera interactivo -->
+        <div class="cuadro-interfaz">
+            <form class="formulario-capa" id="formLogin">
+                
+                <!-- Inputs sobre la madera -->
+                <input type="text" id="usuario" class="campo-entrada" autocomplete="off" required>
+                <input type="password" id="contrasena" class="campo-entrada" required>
+                
+                <!-- Botones sobre la imagen -->
+                <button type="submit" id="btn-iniciar" class="boton-interactivo" title="Iniciar Sesión"></button>
+                <button type="button" id="btn-cancelar" class="boton-interactivo" title="Cancelar" onclick="cancelar()"></button>
+            </form>
         </div>
 
-        <!-- CONTENEDOR ELÁSTICO CON ENLACES -->
-        <div class="contenedor-botones">
-
-            <!-- Panel 1: Cambia el 'href' por la web que quieras -->
-            <a href="https://es.pornhub.com/" class="enlace-panel">
-                <video src="videoboton1.mp4" loop muted preload="metadata" poster="imagenboton1.webp"></video>
-            </a>
-
-            <!-- Panel 2: Cambia el 'href' por la web que quieras -->
-            <a href="https://motionmuse.ai/r/4rbhac00" class="enlace-panel">
-                <video src="videoboton2.mp4" loop muted preload="metadata" poster="imagenboton2.webp"></video>
-            </a>
-
-            <!-- Panel 3: Cambia el 'href' por la web que quieras -->
-            <a href="https://www.reddit.com/r/GOONED/" class="enlace-panel">
-                <video src="videoboton3.mp4" loop muted preload="metadata" poster="imagenboton3.webp"></video>
-            </a>
-
-        </div>
     </div>
 
-    <!-- 3. LÓGICA JAVASCRIPT -->
+    <!-- 3. LÓGICA EN JAVASCRIPT -->
     <script>
         // --- Control de la Intro ---
         window.addEventListener('load', () => {
             const tiempoDeIntro = 3500; 
+
             setTimeout(() => {
                 const intro = document.getElementById('pantalla-intro');
-                const contenido = document.getElementById('contenido-principal');
+                const login = document.getElementById('contenido-login');
+
                 intro.style.opacity = '0';
                 intro.style.visibility = 'hidden';
-                contenido.style.opacity = '1';
+
+                // Aparece el login con su video de fondo
+                login.style.opacity = '1';
             }, tiempoDeIntro);
         });
 
-        // --- Control de Reproducción de Video ---
-        const paneles = document.querySelectorAll('.enlace-panel');
+        // --- Validación de Acceso ---
+        document.getElementById('formLogin').addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            
+            const user = document.getElementById('usuario').value;
+            const pass = document.getElementById('contrasena').value;
 
-        paneles.forEach(panel => {
-            const video = panel.querySelector('video');
-
-            panel.addEventListener('mouseenter', () => {
-                video.play().catch(e => console.log(e));
-            });
-
-            panel.addEventListener('mouseleave', () => {
-                video.pause();
-                // Reseteo rápido para forzar la visualización de la imagen de portada
-                const srcOriginal = video.src;
-                video.src = '';
-                video.load();
-                video.src = srcOriginal;
-            });
+            // Claves de acceso (admin / 1234)
+            if(user === "admin" && pass === "1234") {
+                alert("¡Acceso concedido!");
+                window.location.href = "principal.html"; // Te envía a la pantalla de los 3 videos elásticos
+            } else {
+                alert("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
+            }
         });
+
+        // Botón Cancelar (Limpia los campos escritos)
+        function cancelar() {
+            document.getElementById('usuario').value = '';
+            document.getElementById('contrasena').value = '';
+        }
     </script>
 
 </body>

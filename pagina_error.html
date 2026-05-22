@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error de Autenticación - Acceso Denegado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a0505; /* Fondo rojo oscuro de alerta */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', monospace;
+            overflow: hidden;
+        }
+
+        /* Contenedor central estilo pantalla de Game Over */
+        .contenedor-error {
+            text-align: center;
+            padding: 40px;
+            background-color: #000000;
+            border: 6px solid #ef4444; /* Borde rojo brillante de peligro */
+            box-shadow: 0 0 25px #ef4444, inset 0 0 10px rgba(239, 68, 68, 0.5);
+            max-width: 600px;
+            width: 90%;
+            animation: vibrar 0.5s ease-in-out;
+        }
+
+        .icono-alerta {
+            font-size: 40px;
+            color: #ef4444;
+            margin-bottom: 25px;
+            animation: parpadeo 1s infinite steps(2);
+        }
+
+        h1 {
+            font-size: 16px;
+            color: #ef4444;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-shadow: 2px 2px #000;
+        }
+
+        p {
+            font-size: 10px;
+            color: #9ca3af;
+            line-height: 1.8;
+            margin-bottom: 35px;
+        }
+
+        /* Botón interactivo para reintentar */
+        .btn-reintentar {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #ffffff;
+            background-color: #ef4444;
+            padding: 15px 25px;
+            border: 4px solid #991b1b;
+            box-shadow: inset -4px -4px 0 #7f1d1d, inset 4px 4px 0 #f87171;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-reintentar:active {
+            transform: scale(0.95);
+            box-shadow: inset 4px 4px 0 #7f1d1d;
+        }
+
+        /* Animación de vibración de impacto inicial al cargar */
+        @keyframes vibrar {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* Parpadeo clásico de luces de alarma retro */
+        @keyframes parpadeo {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-error">
+        <div class="icono-alerta">🚨</div>
+        <h1>¡ACCESO DENEGADO!</h1>
+        <p>Las credenciales introducidas son incorrectas o no tienes los permisos necesarios para explorar esta sección.</p>
+        
+        <!-- Enlace que te regresa al login para intentar de nuevo -->
+        <a href="index.html" class="btn-reintentar">REINTENTAR</a>
+    </div>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Sitio Web Interactivo - Efecto Elástico</title>
+    <title>Mi Sitio Web Interactivo - Navegación</title>
     <style>
         /* --- ESTILOS GENERALES --- */
         body, html {
@@ -14,7 +14,7 @@
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #0f172a; 
             color: #f8fafc;
-            overflow: hidden; /* Mantiene la pantalla fija sin barras de scroll */
+            overflow: hidden; 
         }
 
         /* --- PANTALLA DE INTRO (GIF) --- */
@@ -63,57 +63,57 @@
             width: 100%;
             z-index: 10;
             box-sizing: border-box;
+            pointer-events: none; /* Hace que el texto no interfiera con los clics de los videos */
         }
 
         h1 { margin: 0 0 5px 0; font-size: 2rem; color: #fff; }
         .subtitulo { margin: 0; color: #94a3b8; font-size: 1rem; }
 
-        /* --- CONTENEDOR ELÁSTICO (Ocupa toda la pantalla de lado a lado) --- */
+        /* --- CONTENEDOR ELÁSTICO --- */
         .contenedor-botones {
             display: flex;
             width: 100%;
-            height: 100vh; /* Ocupa todo el alto de la pantalla */
-            align-items: stretch; /* Estira los botones verticalmente de arriba a abajo */
-            gap: 0; /* Sin separaciones para que el efecto de empuje sea continuo */
+            height: 100vh; 
+            align-items: stretch; 
+            gap: 0; 
         }
 
-        /* --- ESTILO BASE DE LOS BOTONES (Cada uno inicia con 33.33%) --- */
-        .boton-video {
-            flex: 1; /* Reparte el espacio equitativamente (33% cada uno) */
+        /* --- ESTILO BASE DE LOS ENLACES/BOTONES --- */
+        .enlace-panel {
+            flex: 1; /* Cada uno inicia ocupando el 33.33% de la pantalla */
             background: #000;
-            border: none;
-            padding: 0;
-            cursor: pointer;
+            text-decoration: none; /* Elimina cualquier línea de enlace de texto por defecto */
             position: relative;
             overflow: hidden;
-            /* La magia de la transición: el cambio de 'flex' tardará 0.6 segundos de manera ultra fluida */
+            cursor: pointer;
+            /* Transición fluida para el efecto de empuje elástico */
             transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Añadimos una línea sutil brillante para separar los botones de fondo */
-        .boton-video:not(:last-child) {
+        /* Línea sutil divisoria entre los paneles */
+        .enlace-panel:not(:last-child) {
             border-right: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* --- LA MAGIA DEL EFECTO: AL PASAR EL CURSOR (HOVER) --- */
-        /* El botón seleccionado se expande drásticamente */
-        .contenedor-botones:hover .boton-video:hover {
-            flex: 2.2; /* Crece más del doble de su tamaño original */
+        /* --- EFECTO ELÁSTICO (HOVER) --- */
+        /* El panel seleccionado se expande */
+        .contenedor-botones:hover .enlace-panel:hover {
+            flex: 2.2; 
         }
 
-        /* Al mismo tiempo, los botones que NO tienen el cursor encima se aplastan */
-        .contenedor-botones:hover .boton-video:not(:hover) {
-            flex: 0.4; /* Se encogen fuertemente abriendo paso al seleccionado */
-            opacity: 0.4; /* Se opacan ligeramente para dar protagonismo al del centro */
-            filter: grayscale(40%); /* Pierden un poco de color al aplastarse */
+        /* Los otros dos paneles se aplastan y se opacan */
+        .contenedor-botones:hover .enlace-panel:not(:hover) {
+            flex: 0.4; 
+            opacity: 0.3; 
+            filter: grayscale(50%);
             transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
         }
 
-        /* El video dentro de cada botón ocupará siempre el 100% disponible */
-        .boton-video video {
+        /* El video se adapta al tamaño del panel elástico */
+        .enlace-panel video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Garantiza que el video llene el área elástica sin deformarse */
+            object-fit: cover; 
             display: block;
         }
     </style>
@@ -130,26 +130,26 @@
         
         <div class="encabezado">
             <h1>Explora el Contenido</h1>
-            <p class="subtitulo">Pasa el cursor por las secciones para expandirlas</p>
+            <p class="subtitulo">Pasa el cursor para expandir. Haz clic para entrar.</p>
         </div>
 
-        <!-- CONTENEDOR ELÁSTICO -->
+        <!-- CONTENEDOR ELÁSTICO CON ENLACES -->
         <div class="contenedor-botones">
 
-            <!-- Botón Izquierdo (Se estira a la derecha aplastando al medio y derecho) -->
-            <button class="boton-video">
+            <!-- Panel 1: Cambia el 'href' por la web que quieras -->
+            <a href="https://es.pornhub.com/" class="enlace-panel">
                 <video src="videoboton1.mp4" loop muted preload="metadata" poster="imagenboton1.webp"></video>
-            </button>
+            </a>
 
-            <!-- Botón del Medio (Se estira a ambos lados aplastando a las esquinas) -->
-            <button class="boton-video">
+            <!-- Panel 2: Cambia el 'href' por la web que quieras -->
+            <a href="https://motionmuse.ai/r/4rbhac00" class="enlace-panel">
                 <video src="videoboton2.mp4" loop muted preload="metadata" poster="imagenboton2.webp"></video>
-            </button>
+            </a>
 
-            <!-- Botón Derecho (Se estira a la izquierda aplastando al medio e izquierdo) -->
-            <button class="boton-video">
+            <!-- Panel 3: Cambia el 'href' por la web que quieras -->
+            <a href="https://www.reddit.com/r/GOONED/" class="enlace-panel">
                 <video src="videoboton3.mp4" loop muted preload="metadata" poster="imagenboton3.webp"></video>
-            </button>
+            </a>
 
         </div>
     </div>
@@ -168,19 +168,19 @@
             }, tiempoDeIntro);
         });
 
-        // --- Control de Reproducción de Video (Estilo YouTube) ---
-        const botones = document.querySelectorAll('.boton-video');
+        // --- Control de Reproducción de Video ---
+        const paneles = document.querySelectorAll('.enlace-panel');
 
-        botones.forEach(boton => {
-            const video = FindVideo = boton.querySelector('video');
+        paneles.forEach(panel => {
+            const video = panel.querySelector('video');
 
-            boton.addEventListener('mouseenter', () => {
+            panel.addEventListener('mouseenter', () => {
                 video.play().catch(e => console.log(e));
             });
 
-            boton.addEventListener('mouseleave', () => {
+            panel.addEventListener('mouseleave', () => {
                 video.pause();
-                // Reseteo rápido para volver a pintar la portada .webp
+                // Reseteo rápido para forzar la visualización de la imagen de portada
                 const srcOriginal = video.src;
                 video.src = '';
                 video.load();

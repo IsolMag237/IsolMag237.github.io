@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - 100% CSS</title>
-    <!-- Importamos una fuente estilo Pixel / Retro de Google Fonts -->
+    <title>Inicio de Sesión - Efecto Agujero Negro</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
     <style>
@@ -12,7 +11,7 @@
         * {
             box-sizing: border-box;
             user-select: none;
-            image-rendering: pixelated; /* Fuerza al navegador a no suavizar bordes */
+            image-rendering: pixelated;
         }
 
         body, html {
@@ -24,8 +23,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Press Start 2P', monospace; /* Fuente Pixel */
+            font-family: 'Press Start 2P', monospace;
             overflow: hidden; 
+            perspective: 1000px; /* Da profundidad 3D para el efecto de distorsión */
         }
 
         /* --- VIDEO DE FONDO --- */
@@ -38,146 +38,104 @@
             object-fit: cover;
             z-index: 1; 
             pointer-events: none;
+            transition: filter 1.5s ease;
         }
 
-        /* --- CUADRO PRINCIPAL (MARCO DE MADERA EN CSS) --- */
+        /* --- CUADRO PRINCIPAL (MARCO DE MADERA) --- */
         .cuadro-interfaz {
             position: relative;
             width: 550px;  
             height: 420px; 
-            background-color: #181818; /* Fondo oscuro de la pizarra */
+            background-color: #181818; 
             z-index: 10; 
             padding: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
             
-            /* Bordes de madera pixelados simulados con sombras múltiples */
-            border: 12px solid #4a2f1b; /* Madera base media */
+            border: 12px solid #4a2f1b; 
             box-shadow: 
-                0 0 0 4px #2b1a0e,  /* Borde exterior oscuro */
-                inset 0 0 0 4px #6e472b, /* Brillo interno de madera */
-                0 20px 50px rgba(0, 0, 0, 0.9); /* Sombra proyectada al fondo */
+                0 0 0 4px #2b1a0e,  
+                inset 0 0 0 4px #6e472b, 
+                0 20px 50px rgba(0, 0, 0, 0.9);
+
+            /* Transición elástica de transformación para cuando el agujero negro lo absorba */
+            transition: transform 1.8s cubic-bezier(0.6, -0.28, 0.735, 0.045), opacity 1.5s ease, filter 1.5s ease;
         }
 
-        /* Título Principal */
+        /* --- EFECTO VISUAL DEL AGUJERO NEGRO (Oculto al inicio) --- */
+        #agujero-negro {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 0px;
+            height: 0px;
+            background: radial-gradient(circle, #000000 40%, #1e1b4b 70%, #4c1d95 90%, transparent 100%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99; /* Por encima de la interfaz */
+            pointer-events: none;
+            box-shadow: 0 0 60px 30px #4c1d95, 0 0 100px 60px #000;
+            opacity: 0;
+            transition: width 1.5s cubic-bezier(0.1, 0.8, 0.25, 1), height 1.5s cubic-bezier(0.1, 0.8, 0.25, 1), opacity 1s ease;
+        }
+
+        /* Cuando el agujero se despierta y crece */
+        #agujero-negro.activo {
+            width: 180px;
+            height: 180px;
+            opacity: 1;
+            animation: girarAgujero 0.5s infinite linear;
+        }
+
+        /* --- ANIMACIÓN DE ABSORCIÓN (Se aplica al cuadro de login vía JS) --- */
+        .absorbido {
+            transform: scale(0) rotate(720deg) translate3d(0, 0, -500px) !important;
+            opacity: 0 !important;
+            filter: blur(8px) contrast(200%);
+        }
+
+        /* El fondo de la pantalla también se distorsiona */
+        .fondo-colapsado {
+            filter: blur(20px) hue-rotate(180deg) scale(1.5);
+        }
+
+        /* --- RESTO DE ESTILOS DEL INTERFAZ --- */
         .titulo {
-            color: #ffffff;
-            font-size: 20px;
-            margin-top: 10px;
-            margin-bottom: 35px;
-            text-align: center;
-            text-shadow: 3px 3px #000000;
-            letter-spacing: 2px;
+            color: #ffffff; font-size: 20px; margin-top: 10px; margin-bottom: 35px; text-align: center; text-shadow: 3px 3px #000; letter-spacing: 2px;
         }
-
-        /* Contenedor de cada campo */
-        .grupo-campo {
-            width: 85%;
-            margin-bottom: 25px;
-        }
-
-        /* Etiquetas (USUARIO / CONTRASEÑA) */
-        .etiqueta {
-            color: #df8026; /* Naranja pixel art */
-            font-size: 12px;
-            margin-bottom: 12px;
-            display: block;
-            text-shadow: 2px 2px #000;
-        }
-
-        /* --- CAJAS DE ENTRADA ESTILO MADERA --- */
+        .grupo-campo { width: 85%; margin-bottom: 25px; }
+        .etiqueta { color: #df8026; font-size: 12px; margin-bottom: 12px; display: block; text-shadow: 2px 2px #000; }
+        
         .campo-entrada {
-            width: 100%;
-            height: 44px;
-            background-color: #2b1a0e; /* Fondo madera oscura */
-            border: 4px solid #140b05; /* Borde oscuro profundo */
-            box-shadow: inset 0 -4px 0 #4a2f1b, inset 0 4px 0 #000; /* Efecto relieve interno */
-            outline: none;
-            color: #fcd34d; /* Texto dorado */
-            font-family: 'Press Start 2P', monospace;
-            font-size: 12px;
-            padding: 0 12px;
-            user-select: text;
+            width: 100%; height: 44px; background-color: #2b1a0e; border: 4px solid #140b05;
+            box-shadow: inset 0 -4px 0 #4a2f1b, inset 0 4px 0 #000; outline: none;
+            color: #fcd34d; font-family: 'Press Start 2P', monospace; font-size: 12px; padding: 0 12px; user-select: text;
         }
 
-        /* --- CONTENEDOR DE BOTONES --- */
-        .contenedor-botones {
-            display: flex;
-            width: 85%;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-
-        /* Estilo base para botones estilo RPG */
+        .contenedor-botones { display: flex; width: 85%; justify-content: space-between; margin-top: 15px; }
+        
         .btn {
-            width: 46%;
-            height: 48px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: #ffffff;
-            cursor: pointer;
-            outline: none;
-            text-shadow: 2px 2px #000;
-            
-            /* Estructura de borde pixelado */
-            border: 4px solid #140b05;
-            box-shadow: inset -4px -4px 0 rgba(0,0,0,0.4), inset 4px 4px 0 rgba(255,255,255,0.3);
-            transition: transform 0.1s ease;
+            width: 46%; height: 48px; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #ffffff; cursor: pointer; outline: none; text-shadow: 2px 2px #000;
+            border: 4px solid #140b05; box-shadow: inset -4px -4px 0 rgba(0,0,0,0.4), inset 4px 4px 0 rgba(255,255,255,0.3); transition: transform 0.1s ease;
         }
-
-        .btn:active {
-            transform: scale(0.96);
-            box-shadow: inset 4px 4px 0 rgba(0,0,0,0.4); /* Invierte relieve al presionar */
-        }
-
-        /* Botón Iniciar Sesión (Azul) */
-        .btn-azul {
-            background-color: #0066cc;
-            box-shadow: inset -4px -4px 0 #003399, inset 4px 4px 0 #3399ff;
-        }
-        .btn-azul:hover {
-            background-color: #0052a5;
-        }
-
-        /* Botón Cancelar (Gris) */
-        .btn-gris {
-            background-color: #8c8c8c;
-            box-shadow: inset -4px -4px 0 #595959, inset 4px 4px 0 #b3b3b3;
-        }
-        .btn-gris:hover {
-            background-color: #737373;
-        }
+        .btn:active { transform: scale(0.96); }
+        .btn-azul { background-color: #0066cc; box-shadow: inset -4px -4px 0 #003399, inset 4px 4px 0 #3399ff; }
+        .btn-azul:hover { background-color: #0052a5; }
+        .btn-gris { background-color: #8c8c8c; box-shadow: inset -4px -4px 0 #595959, inset 4px 4px 0 #b3b3b3; }
+        .btn-gris:hover { background-color: #737373; }
 
         /* --- PANTALLA DE INTRO (GIF) --- */
         #pantalla-intro {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000000; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.8s ease, visibility 0.8s ease;
         }
+        #gif-intro { width: 100vw; height: 100vh; object-fit: cover; }
+        #contenido-login { opacity: 0; transition: opacity 1.2s ease; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
 
-        #gif-intro {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-        }
-
-        #contenido-login {
-            opacity: 0;
-            transition: opacity 1.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
+        /* Giro infinito del vórtice cósmico */
+        @keyframes girarAgujero {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
     </style>
 </head>
@@ -188,31 +146,28 @@
         <img id="gif-intro" src="intro.gif" alt="Cargando...">
     </div>
 
-    <!-- 2. INTERFAZ DE LOGIN (100% CSS) -->
+    <!-- Vórtice del Agujero Negro Dinámico -->
+    <div id="agujero-negro"></div>
+
+    <!-- 2. INTERFAZ DE LOGIN -->
     <div id="contenido-login">
         
-        <!-- Video de fondo animado -->
-        <video class="video-fondo" src="video_1772677728570.mp4" autoplay loop muted playsinline></video>
+        <video id="bg-video" class="video-fondo" src="video_1772677728570.mp4" autoplay loop muted playsinline></video>
 
-        <!-- Cuadro de interfaz generado con puro CSS -->
-        <div class="cuadro-interfaz">
+        <div id="login-box" class="cuadro-interfaz">
             <div class="titulo">INICIO DE SESIÓN</div>
 
             <form style="width: 100%; display: flex; flex-direction: column; align-items: center;" id="formLogin">
-                
-                <!-- Campo Usuario -->
                 <div class="grupo-campo">
                     <label class="etiqueta">USUARIO:</label>
                     <input type="text" id="usuario" class="campo-entrada" autocomplete="off" required>
                 </div>
 
-                <!-- Campo Contraseña -->
                 <div class="grupo-campo">
                     <label class="etiqueta">CONTRASEÑA:</label>
                     <input type="password" id="contrasena" class="campo-entrada" required>
                 </div>
                 
-                <!-- Botones -->
                 <div class="contenedor-botones">
                     <button type="submit" class="btn btn-azul">INICIAR SESIÓN</button>
                     <button type="button" class="btn btn-gris" onclick="cancelar()">CANCELAR</button>
@@ -222,9 +177,9 @@
 
     </div>
 
-    <!-- 3. LÓGICA DE DIRECCIONAMIENTO -->
+    <!-- 3. LÓGICA DE COLAPSO CÓSMICO -->
     <script>
-        // Control de la Intro
+        // Control de la Intro inicial
         window.addEventListener('load', () => {
             const tiempoDeIntro = 3500; 
             setTimeout(() => {
@@ -234,17 +189,31 @@
             }, tiempoDeIntro);
         });
 
-        // Validación de Acceso
+        // Evento de Login e Inicio del Colapso Gravitacional
         document.getElementById('formLogin').addEventListener('submit', (e) => {
             e.preventDefault(); 
+            
             const user = document.getElementById('usuario').value;
             const pass = document.getElementById('contrasena').value;
+            const destino = (user === "admin" && pass === "1234") ? "pagina_exito.html" : "pagina_error.html";
 
-            if(user === "admin" && pass === "1234") {
-                window.location.href = "pagina_exito.html"; 
-            } else {
-                window.location.href = "pagina_error.html"; 
-            }
+            // 1. Despertamos el Agujero Negro en el centro exacto
+            const agujero = document.getElementById('agujero-negro');
+            const cajaLogin = document.getElementById('login-box');
+            const videoFondo = document.getElementById('bg-video');
+
+            agujero.classList.add('activa');
+
+            // 2. Tras una fracción de segundo, la gravedad absorbe y deforma la interfaz
+            setTimeout(() => {
+                cajaLogin.classList.add('absorbido');
+                videoFondo.classList.add('fondo-colapsado');
+            }, 300);
+
+            // 3. Cuando la página ha sido completamente absorbida por la nada (1.8 segundos), ejecutamos el salto
+            setTimeout(() => {
+                window.location.href = destino;
+            }, 2000);
         });
 
         function cancelar() {

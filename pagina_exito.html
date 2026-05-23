@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Principal - Acceso Concedido</title>
+    
+    <!-- Ícono de la pestaña -->
+    <link rel="icon" type="image/jpeg" href="icon.jpg">
+    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         * {
@@ -16,7 +20,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #0b0f19; /* Fondo azul noche profundo */
+            background-color: #0b0f19; 
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -26,15 +30,15 @@
             overflow: hidden;
         }
 
-        /* Contenedor central estilo logro de videojuego */
         .contenedor-exito {
             text-align: center;
             padding: 40px;
             background-color: #111827;
-            border: 6px solid #10b981; /* Borde verde de éxito */
+            border: 6px solid #10b981; 
             box-shadow: 0 0 20px #10b981, inset 0 0 10px rgba(16, 185, 129, 0.5);
             max-width: 600px;
             width: 90%;
+            animation: vibrarImpacto 0.6s ease-out; /* Simula que es expulsado por el agujero */
         }
 
         .icono-candado {
@@ -59,7 +63,6 @@
             margin-bottom: 35px;
         }
 
-        /* Botón estilo retro para salir */
         .btn-regresar {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
@@ -83,6 +86,12 @@
             50% { transform: scale(1.1); filter: drop-shadow(0 0 15px #10b981); }
             100% { transform: scale(1); filter: drop-shadow(0 0 2px #10b981); }
         }
+
+        @keyframes vibrarImpacto {
+            0% { transform: scale(0.4) rotate(-45deg); filter: blur(10px); }
+            70% { transform: scale(1.05) rotate(5deg); filter: blur(0px); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
     </style>
 </head>
 <body>
@@ -91,8 +100,6 @@
         <div class="icono-candado">🔓</div>
         <h1>¡ACCESO CONCEDIDO!</h1>
         <p>Bienvenido al panel principal de la base de datos. Has iniciado sesión de manera correcta y segura.</p>
-        
-        <!-- Enlace para desloguearse y volver al inicio de sesión -->
         <a href="index.html" class="btn-regresar">CERRAR SESIÓN</a>
     </div>
 

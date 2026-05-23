@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error de Autenticación - Acceso Denegado</title>
+    
+    <!-- Ícono de la pestaña -->
+    <link rel="icon" type="image/jpeg" href="icon.jpg">
+    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         * {
@@ -16,7 +20,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #1a0505; /* Fondo rojo oscuro de alerta */
+            background-color: #1a0505; 
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -26,16 +30,15 @@
             overflow: hidden;
         }
 
-        /* Contenedor central estilo pantalla de Game Over */
         .contenedor-error {
             text-align: center;
             padding: 40px;
             background-color: #000000;
-            border: 6px solid #ef4444; /* Borde rojo brillante de peligro */
+            border: 6px solid #ef4444; 
             box-shadow: 0 0 25px #ef4444, inset 0 0 10px rgba(239, 68, 68, 0.5);
             max-width: 600px;
             width: 90%;
-            animation: vibrar 0.5s ease-in-out;
+            animation: expulsionAgresiva 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .icono-alerta {
@@ -60,7 +63,6 @@
             margin-bottom: 35px;
         }
 
-        /* Botón interactivo para reintentar */
         .btn-reintentar {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
@@ -79,17 +81,14 @@
             box-shadow: inset 4px 4px 0 #7f1d1d;
         }
 
-        /* Animación de vibración de impacto inicial al cargar */
-        @keyframes vibrar {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
-        }
-
-        /* Parpadeo clásico de luces de alarma retro */
         @keyframes parpadeo {
             0% { opacity: 1; }
             50% { opacity: 0.3; }
+        }
+
+        @keyframes expulsionAgresiva {
+            0% { transform: scale(2) rotate(180deg); filter: blur(15px); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); filter: blur(0px); opacity: 1; }
         }
     </style>
 </head>
@@ -99,8 +98,6 @@
         <div class="icono-alerta">🚨</div>
         <h1>¡ACCESO DENEGADO!</h1>
         <p>Las credenciales introducidas son incorrectas o no tienes los permisos necesarios para explorar esta sección.</p>
-        
-        <!-- Enlace que te regresa al login para intentar de nuevo -->
         <a href="index.html" class="btn-reintentar">REINTENTAR</a>
     </div>
 

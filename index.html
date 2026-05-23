@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión - Efecto Agujero Negro</title>
+    
+    <!-- Ícono de la pestaña -->
+    <link rel="icon" type="image/jpeg" href="icon.jpg">
+    
+    <!-- Fuente Pixel de Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
     <style>
@@ -25,7 +30,7 @@
             align-items: center;
             font-family: 'Press Start 2P', monospace;
             overflow: hidden; 
-            perspective: 1000px; /* Da profundidad 3D para el efecto de distorsión */
+            perspective: 1000px; 
         }
 
         /* --- VIDEO DE FONDO --- */
@@ -41,7 +46,7 @@
             transition: filter 1.5s ease;
         }
 
-        /* --- CUADRO PRINCIPAL (MARCO DE MADERA) --- */
+        /* --- CUADRO PRINCIPAL (MARCO DE MADERA EN CSS) --- */
         .cuadro-interfaz {
             position: relative;
             width: 550px;  
@@ -59,11 +64,10 @@
                 inset 0 0 0 4px #6e472b, 
                 0 20px 50px rgba(0, 0, 0, 0.9);
 
-            /* Transición elástica de transformación para cuando el agujero negro lo absorba */
             transition: transform 1.8s cubic-bezier(0.6, -0.28, 0.735, 0.045), opacity 1.5s ease, filter 1.5s ease;
         }
 
-        /* --- EFECTO VISUAL DEL AGUJERO NEGRO (Oculto al inicio) --- */
+        /* --- EFECTO VISUAL DEL AGUJERO NEGRO --- */
         #agujero-negro {
             position: fixed;
             top: 50%;
@@ -73,14 +77,13 @@
             background: radial-gradient(circle, #000000 40%, #1e1b4b 70%, #4c1d95 90%, transparent 100%);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            z-index: 99; /* Por encima de la interfaz */
+            z-index: 99; 
             pointer-events: none;
             box-shadow: 0 0 60px 30px #4c1d95, 0 0 100px 60px #000;
             opacity: 0;
             transition: width 1.5s cubic-bezier(0.1, 0.8, 0.25, 1), height 1.5s cubic-bezier(0.1, 0.8, 0.25, 1), opacity 1s ease;
         }
 
-        /* Cuando el agujero se despierta y crece */
         #agujero-negro.activo {
             width: 180px;
             height: 180px;
@@ -88,19 +91,18 @@
             animation: girarAgujero 0.5s infinite linear;
         }
 
-        /* --- ANIMACIÓN DE ABSORCIÓN (Se aplica al cuadro de login vía JS) --- */
+        /* Clases de deformación por gravedad */
         .absorbido {
             transform: scale(0) rotate(720deg) translate3d(0, 0, -500px) !important;
             opacity: 0 !important;
             filter: blur(8px) contrast(200%);
         }
 
-        /* El fondo de la pantalla también se distorsiona */
         .fondo-colapsado {
             filter: blur(20px) hue-rotate(180deg) scale(1.5);
         }
 
-        /* --- RESTO DE ESTILOS DEL INTERFAZ --- */
+        /* --- COMPONENTES INTERNOS --- */
         .titulo {
             color: #ffffff; font-size: 20px; margin-top: 10px; margin-bottom: 35px; text-align: center; text-shadow: 3px 3px #000; letter-spacing: 2px;
         }
@@ -119,7 +121,7 @@
             width: 46%; height: 48px; font-family: 'Press Start 2P', monospace; font-size: 10px; color: #ffffff; cursor: pointer; outline: none; text-shadow: 2px 2px #000;
             border: 4px solid #140b05; box-shadow: inset -4px -4px 0 rgba(0,0,0,0.4), inset 4px 4px 0 rgba(255,255,255,0.3); transition: transform 0.1s ease;
         }
-        .btn:active { transform: scale(0.96); }
+        .btn:active { transform: scale(0.96); box-shadow: inset 4px 4px 0 rgba(0,0,0,0.4); }
         .btn-azul { background-color: #0066cc; box-shadow: inset -4px -4px 0 #003399, inset 4px 4px 0 #3399ff; }
         .btn-azul:hover { background-color: #0052a5; }
         .btn-gris { background-color: #8c8c8c; box-shadow: inset -4px -4px 0 #595959, inset 4px 4px 0 #b3b3b3; }
@@ -130,9 +132,9 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.8s ease, visibility 0.8s ease;
         }
         #gif-intro { width: 100vw; height: 100vh; object-fit: cover; }
+        
         #contenido-login { opacity: 0; transition: opacity 1.2s ease; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
 
-        /* Giro infinito del vórtice cósmico */
         @keyframes girarAgujero {
             from { transform: translate(-50%, -50%) rotate(0deg); }
             to { transform: translate(-50%, -50%) rotate(360deg); }
@@ -146,7 +148,7 @@
         <img id="gif-intro" src="intro.gif" alt="Cargando...">
     </div>
 
-    <!-- Vórtice del Agujero Negro Dinámico -->
+    <!-- Vórtice Cósmico -->
     <div id="agujero-negro"></div>
 
     <!-- 2. INTERFAZ DE LOGIN -->
@@ -177,9 +179,8 @@
 
     </div>
 
-    <!-- 3. LÓGICA DE COLAPSO CÓSMICO -->
+    <!-- 3. LÓGICA DE REDIRECCIÓN Y COLAPSO -->
     <script>
-        // Control de la Intro inicial
         window.addEventListener('load', () => {
             const tiempoDeIntro = 3500; 
             setTimeout(() => {
@@ -189,7 +190,6 @@
             }, tiempoDeIntro);
         });
 
-        // Evento de Login e Inicio del Colapso Gravitacional
         document.getElementById('formLogin').addEventListener('submit', (e) => {
             e.preventDefault(); 
             
@@ -197,20 +197,19 @@
             const pass = document.getElementById('contrasena').value;
             const destino = (user === "admin" && pass === "1234") ? "pagina_exito.html" : "pagina_error.html";
 
-            // 1. Despertamos el Agujero Negro en el centro exacto
             const agujero = document.getElementById('agujero-negro');
             const cajaLogin = document.getElementById('login-box');
             const videoFondo = document.getElementById('bg-video');
 
-            agujero.classList.add('activa');
+            // Inicia la absorción
+            agujero.classList.add('activo');
 
-            // 2. Tras una fracción de segundo, la gravedad absorbe y deforma la interfaz
             setTimeout(() => {
                 cajaLogin.classList.add('absorbido');
                 videoFondo.classList.add('fondo-colapsado');
             }, 300);
 
-            // 3. Cuando la página ha sido completamente absorbida por la nada (1.8 segundos), ejecutamos el salto
+            // Viaje a través del agujero de gusano
             setTimeout(() => {
                 window.location.href = destino;
             }, 2000);
